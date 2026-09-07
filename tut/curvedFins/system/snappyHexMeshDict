@@ -1,0 +1,138 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  13
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeEtc "caseDicts/mesh/generation/snappyHexMeshDict.cfg"
+
+castellatedMesh on;
+snap            on;
+addLayers       on;
+
+geometry
+{
+    CAD
+    {
+        type triSurface;
+        file "CAD.obj";
+        regions
+        {
+            //<inletPatch>  { name inlet; }
+            //<outletPatch> { name outlet; }
+        }
+    }
+};
+
+castellatedMeshControls
+{
+    features
+    (
+      { file "CAD.eMesh"; level 4; }
+      //{ file "CAD.extendedFeatureEdgeMesh"; level 4; }
+    );
+
+    refinementSurfaces
+    {
+        // Required for mesh removal in castellatedMesh step
+        CAD
+        {
+            level (4 5);
+            //patchInfo { type wall; }
+
+            //regions
+            //{
+            //    <inletPatch>
+            //    {
+            //        level (2 2);
+            //        patchInfo
+            //        {
+            //            type patch;
+            //            inGroups (inlet);
+            //        }
+            //    }
+
+            //    <outletPatch>
+            //    {
+            //        level (2 2);
+            //        patchInfo
+            //        {
+            //            type patch;
+            //            inGroups (outlet);
+            //        }
+            //    }
+            //}
+        }
+    }
+
+    refinementRegions
+    {
+        //CAD
+        //{
+        //    mode    outside;
+        //    level   4;
+        //}
+    }
+
+    //insidePoint (1e-5 1e-5 1e-5); // Offset from (0 0 0) to avoid
+    //insidePoint (0 0 0.09);
+    //insidePoint (-0.115062 0.161323 0.180340) // 7
+    //locationInMesh (-0.115062 0.161323 0.180340) // 7
+    insidePoint (1e-3 1e-3 26); // Quarter
+
+                                     // coinciding with face or edge
+    nCellsBetweenLevels 2;
+}
+
+snapControls
+{
+    //nSmoothPatch    3;
+    //nSolveIter      50;
+    //nRelaxIter      5;
+  //explicitFeatureSnap    true;
+  implicitFeatureSnap    true;
+}
+
+addLayersControls
+{
+    layers
+    {
+        "CAD.*"
+        {
+            nSurfaceLayers 3;
+        }
+    }
+
+    relativeSizes       true; // false, usually with firstLayerThickness
+    expansionRatio      1.2;
+    finalLayerThickness 0.25;
+    minThickness        0.01;
+    //firstLayerThickness 0.00007;
+    //firstLayerThickness .1;
+
+//  maxThicknessToMedialRatio 0.6;
+
+    //nLayerIter                15;
+    //nRelaxedIter              15;
+    //nRelaxIter                15;
+}
+
+writeFlags
+(
+//    scalarLevels
+    layerSets
+    layerFields
+);
+
+mergeTolerance 1e-6;
+
+// ************************************************************************* //

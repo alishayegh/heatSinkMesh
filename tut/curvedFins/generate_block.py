@@ -1,0 +1,1 @@
+../../tools/generate_block.py
