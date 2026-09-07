@@ -12,7 +12,7 @@ run the following in your terminal:
 ## Create the final mesh
 snappyHexMesh
 
-## Visualize in ParaView
+## Optional: Visualize in ParaView
 paraFoam&
 
 ## Optionally, in ParaView, go to File-> Load State-> figures-> state.pvsm
@@ -21,7 +21,11 @@ paraFoam&
 ## Results
 
 A boundary conforming mesh, with thin layers near the walls (fins), generated
-in a matter of seconds.
+in a matter of seconds.  
+  
+The mesh can be visualized in other formats too, for example:
+- *fluentMesh.msh*: A Fluent mesh.
+- *vtkMesh.msh*: A VTK mesh.
 
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%;">
   <img src="figures/fins.png" alt="Image 7" style="width: 100%; height: auto;">
